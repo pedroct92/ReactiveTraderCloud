@@ -21,25 +21,27 @@ spec:
         build: "__BUILD__"
     spec:
       containers:
-      - name: "nsgate__MAJOR__"
-        image: "__DOCKERIMAGE__"
-        imagePullPolicy: IfNotPresent
-        ports:
-          - containerPort: 80
-            name: "http"
-          - containerPort: 443
-            name: "https"
-          - containerPort: 8000
-            name: "broker"
-          - containerPort: 1113
-            name: "eventstore-tcp"
-          - containerPort: 2113
-            name: "eventstore"
-        volumeMounts:
-        - name: web-ssl
-          readOnly: true
-          mountPath: /etc/ssl
+        - name: "nsgate__MAJOR__"
+          image: "__DOCKERIMAGE__"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: "http"
+            - containerPort: 443
+              name: "https"
+            - containerPort: 8000
+              name: "broker"
+            - containerPort: 1113
+              name: "eventstore-tcp"
+            - containerPort: 2113
+              name: "eventstore"
+            - containerPort: 8888
+              name: "greenkey"
+          volumeMounts:
+            - name: web-ssl
+              readOnly: true
+              mountPath: /etc/ssl
       volumes:
-      - name: web-ssl
-        secret:
-          secretName: web-ssl
+        - name: web-ssl
+          secret:
+            secretName: web-ssl
