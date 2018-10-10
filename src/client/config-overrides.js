@@ -11,10 +11,10 @@ module.exports = function override(config, env) {
         autoLabel: true,
         hoist: env === 'production',
         labelFormat: '[filename]--[local]',
-        sourceMap: env !== 'production'
-      }
+        sourceMap: env !== 'production',
+      },
     ],
-    config
+    config,
   )
 
   // Rewire typescript with our rewired babel config
@@ -22,10 +22,10 @@ module.exports = function override(config, env) {
   const tsLoader = getLoader(config.module.rules, rule => /ts|tsx/.test(rule.test))
   tsLoader.use.unshift({
     loader: babelLoader.loader,
-    options: babelLoader.options
+    options: babelLoader.options,
   })
 
   config.devtool = env !== 'production' ? 'source-map' : config.devtool
 
-  return config 
+  return config
 }
