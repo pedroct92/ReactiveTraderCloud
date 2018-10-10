@@ -30,7 +30,7 @@ if [[ $# < 1 ]];then
   usage
 fi
 namespace=$1
-build=$2
+build=${2:""}
 
 set -euo pipefail
 
@@ -64,22 +64,34 @@ kubectl="${root_directory}/deploy/clis/kubectl"
 manifests_directory_in_container="deploy/kubernetes/manifests"
 
 # namespace
-${kubectl} create -f ${manifests_directory_in_container}/ns.yml
+{
+  ${kubectl} create -f ${manifests_directory_in_container}/ns.yml
+} || {
+  echo "Failed to create namepsace"
+}
 
   # service
-${kubectl} create -f ${manifests_directory_in_container}/broker-svc.yml
-${kubectl} create -f ${manifests_directory_in_container}/eventstore-svc.yml
-${kubectl} create -f ${manifests_directory_in_container}/web-svc.yml
+{
+  ${kubectl} create -f ${manifests_directory_in_container}/broker-svc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/eventstore-svc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/web-svc.yml
+} || {
+  echo "Failed to create service"
+}
 
   # replication controller
-${kubectl} create -f ${manifests_directory_in_container}/web-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/broker-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/eventstore-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/blotter-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/pricing-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/referencedataread-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/tradeexecution-rc.yml
-${kubectl} create -f ${manifests_directory_in_container}/analytics-rc.yml
+{
+  ${kubectl} create -f ${manifests_directory_in_container}/web-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/broker-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/eventstore-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/blotter-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/pricing-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/referencedataread-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/tradeexecution-rc.yml
+  ${kubectl} create -f ${manifests_directory_in_container}/analytics-rc.yml
+} || {
+  echo "Failed to create controller"
+}
 
 sleep 2
 
