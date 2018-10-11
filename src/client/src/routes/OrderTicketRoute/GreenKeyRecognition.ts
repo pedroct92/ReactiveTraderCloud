@@ -2,16 +2,16 @@
  *
  * /dynamic/recognize
  * curl  -T ./quote_detection.mp3  "http://localhost:8783/client/dynamic/recognize"
- * 
+ *
  * ws://localhost:8783/client/ws/speech?content-type=audio/x-raw,+layout=(string)interleaved,+rate=(int)44100,+format=(string)S16LE,+channels=(int)1
- * 
- * 
+ *
+ *
  * Example phrase: dec eighteen schatz sixty four and a half offered
  */
 
 export function createWebSocket(config: any = {}): WebSocket {
   config = {
-    serviceURI: 'ws://localhost:8783/client/ws/speech',
+    serviceURI: process.env.REACT_APP_GREENKEY_URL || 'ws://localhost:8888/client/ws/speech',
     contentType: 'audio/webm;codecs=opus',
     ...config,
   }

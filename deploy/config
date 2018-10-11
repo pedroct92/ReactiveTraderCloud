@@ -22,6 +22,7 @@ serversContainer="reactivetrader/servers:$serversContainer_major.$serversContain
 webContainer_major="0"
 webContainer_minor="0"
 webContainer="reactivetrader/web:$webContainer_major.$webContainer_minor"
+web_container="reactivetrader/web:$webContainer_major.$webContainer_minor"
 
 # Other containers
 # OS
