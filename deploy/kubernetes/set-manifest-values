@@ -1,0 +1,71 @@
+#! /bin/bash
+
+if [[ $# < 3 ]];then
+    echo " "
+    echo -e "\033[0;32mUsage:\033[0m"
+    echo " "
+    echo "    $0 SERVICE NAME KEY:VALUE … KEY:VALUE"
+    echo " "
+    exit 1
+fi
+
+service=$1
+name=$2
+key_value_pairs=${@:3}
+
+# load configuration and libs
+this_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+root_directory="${this_directory}/../.."
+. ${root_directory}/deploy/config
+. ${root_directory}/deploy/kubernetes/helpers/functions.sh
+
+# fill manifest
+manifests_directory="${root_directory}/deploy/kubernetes/manifests"
+mkdir -p ${manifests_directory}
+source_manifest="${this_directory}/templates/${service}/${name}.yml"
+target_manifest="${manifests_directory}/${service}-${name}.yml"
+cp -f ${source_manifest} ${target_manifest}
+
+expected_keys=$(cat $source_manifest | perl -n -e'/{{(.+)}}/ && print "$1 "')
+missing_key=()
+for key in $expected_keys
+do
+  present=$(echo ${key_value_pairs[@]} | grep "$key:")
+  if [[ $present == "" ]]; then
+    missing_keys+=($key)
+  fi;
+done
+
+if [[ ${missing_keys[@]} != "" ]]; then
+  echo " "
+  echo -e "\033[0;31mMissing values for $service $name:\033[0m"
+  for k in ${missing_keys[@]}; do
+    echo "    $k"
+  done
+  echo " "
+  exit 1
+fi;
+
+missing_values=()
+for string in $key_value_pairs
+do
+  pair=(${string//:/ })
+  key=${pair[0]}
+  value=${pair[1]}
+
+  if [[ $string == "$key:" ]]; then
+    missing_values+=($key)
+  fi;
+
+  sed -ie "s/{{${key}}}/${value}/g" ${target_manifest}
+done
+
+if [[ ${missing_values[@]} != "" ]]; then
+  echo " "
+  echo -e "\033[0;31mMissing values for $service $name:\033[0m"
+  for k in ${missing_values[@]}; do
+    echo "    $k"
+  done
+  echo " "
+  exit 1
+fi;

@@ -1,0 +1,54 @@
+#! /bin/bash
+
+usage() {
+  echo " "
+  echo -e "\033[0;32mUsage:\033[0m"
+  echo " "
+  echo "    $0 NAMESPACE SOURCE_VALUES"
+  echo " "
+  exit 1
+}
+
+if [[ $# < 2 ]];then
+  usage
+fi
+namespace=$1
+source_values=$2
+
+set -eo pipefail
+
+source $source_values
+
+service_name="greenkey-scribe"
+
+this_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+root_directory="${this_directory}/../.."
+manifests_directory="deploy/kubernetes/manifests"
+
+kubectl="${root_directory}/deploy/clis/kubectl"
+
+manifests=(
+  registry-credentials
+  deployment
+  service
+)
+
+for manifest in ${manifests[@]}; do
+  ${this_directory}/set-manifest-values $service_name $manifest \
+    namespace:$namespace \
+    greenkey.dockerconfigjson:$greenkey_dockerconfigjson \
+    greenkey.scribe.user:$greenkey_scribe_user \
+    greenkey.scribe.pass:$greenkey_scribe_pass \
+    greenkey.scribe.product_class:$greenkey_scribe_product_class
+done
+
+for manifest in ${manifests[@]}; do
+  echo ""
+  echo "Applying $manifest"
+  {
+    ${kubectl} apply -f ${manifests_directory}/$service_name-$manifest.yml
+  } || {
+    echo ""
+    echo "Failed to apply $service_name $manifest"
+  }
+done
