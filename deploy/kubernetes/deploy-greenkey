@@ -1,23 +1,19 @@
 #! /bin/bash
 
-usage() {
+if [[ $# < 2 ]];then
   echo " "
   echo -e "\033[0;32mUsage:\033[0m"
   echo " "
   echo "    $0 NAMESPACE SOURCE_VALUES"
   echo " "
   exit 1
-}
-
-if [[ $# < 2 ]];then
-  usage
 fi
 namespace=$1
-source_values=$2
+source_path=$2
 
 set -eo pipefail
 
-source $source_values
+source $source_path
 
 service_name="greenkey-scribe"
 

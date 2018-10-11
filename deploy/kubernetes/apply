@@ -1,28 +1,28 @@
 #! /bin/bash
 
 usage() {
-  echo " "
+  echo ""
   echo -e "\033[0;32mUsage:\033[0m"
-  echo " "
+  echo ""
   echo "    apply NAMESPACE [BUILD_ID]"
-  echo " "
+  echo ""
   echo "- NAMESPACE is the environment that you define for kubernetes."
   echo "  It's a string like <test> or <production>"
-  echo " "
+  echo ""
   echo "- BUILD_ID is optional."
   echo "  It can be the build number or a string that you have defined at build time"
-  echo " "
-  echo " "
+  echo ""
+  echo ""
   echo "  ie: "
   echo "      $0 test"
   echo "      will start the environment test and apply last version"
-  echo " "
+  echo ""
   echo "      $0 mypersonalenv 628"
   echo "      will start the environment mypersonalenv and apply version 628"
-  echo " "
+  echo ""
   echo " Just ensure that your build is stored on dockerhub by looking at one of the image"
   echo "   https://hub.docker.com/u/adaptivetrader/dashboard/"
-  echo " "
+  echo ""
   exit 1
 }
 
@@ -50,6 +50,16 @@ kubectl="${root_directory}/deploy/clis/kubectl"
   exit 1
 }
 
+if [[ $GREENKEY_SOURCE_PATH != '' ]]; then
+  echo ""
+  echo "Applying GreenKey deployment"
+  . ${this_directory}/deploy-greenkey $namespace $GREENKEY_SOURCE_PATH
+else
+  echo ""
+  echo "Skipping GreenKey deployment, requires environment variable:"
+  echo "    GREENKEY_SOURCE_PATH"
+fi;
+
 # services
 svc=(
   web
@@ -57,13 +67,13 @@ svc=(
   eventstore
 )
 for manifest in ${svc[@]}; do
-  echo " "
+  echo ""
   echo "Appling $manifest service"
   {
     ${this_directory}/templates//generate_svc_manifest $manifest $namespace;
     ${kubectl} apply -f ${kubectl_manifest_directory}/$manifest-svc.yml
   } || {
-    echo " "
+    echo ""
     echo "Failed to apply $manifest service"
   }
 done
@@ -80,7 +90,7 @@ controllers=(
   analytics
 )
 for manifest in ${svc[@]}; do
-  echo " "
+  echo ""
   echo "Appling $manifest replication controller"
   {
     ${this_directory}/templates//generate_rc_manifest $manifest $namespace;
@@ -92,9 +102,9 @@ done
 
 sleep 2
 
-echo " "
-echo " "
+echo ""
+echo ""
 ${this_directory}/describe $namespace
-echo " "
-echo " "
+echo ""
+echo ""
 echo " Wait a moment and run <describe $namespace> to see the PODS generated on your cluster"
