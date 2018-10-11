@@ -43,9 +43,6 @@ jobs:
             echo "export SERVER_TOUCHED=$SERVER_TOUCHED" >> $BASH_ENV
             echo "export TOUCHED_FILES=$TOUCHED_FILES" >> $BASH_ENV
       - run:
-          name: "Show modified files"
-          command: echo $TOUCHED_FILES
-      - run:
           name: "Create artifacts and test results directories"
           command: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run:
@@ -87,10 +84,10 @@ jobs:
           name: "Check connectivity"
           command: |
             if [ $SERVER_TOUCHED == 1 ]; then
-                for i in {1..10}; do 
-                    curl http://localhost:2113/web/index.html && break; 
-                    sleep 1; 
-                    if [[ $i == 10 ]]; then 
+                for i in {1..10}; do
+                    curl http://localhost:2113/web/index.html && break;
+                    sleep 1;
+                    if [[ $i == 10 ]]; then
                         false;
                     fi;
                 done
