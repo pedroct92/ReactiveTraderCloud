@@ -10,9 +10,9 @@ fi;
 
 echo "Comparing from $TARGET $COMMIT"
 
-export BUILD_LIST=()
+export BUILD_LIST=(web)
 export LOAD_LIST=()
-export RUN_LIST=()
+export RUN_LIST=(web)
 export PULL_LIST=()
 export TOUCHED_FILES=$(git diff --name-only --diff-filter=ADMR $COMMIT~..@)
 
@@ -30,7 +30,7 @@ else
     PULL_LIST+=("servers" "broker" "populatedEventstore")
 fi
 
-if [[ $(echo $TOUCHED_FILES | grep -E "(^src/client|/web)") != "" ]]; then
-    BUILD_LIST+=("web")
-    RUN_LIST+=("web")
-fi
+# if [[ $(echo $TOUCHED_FILES | grep -E "(^src/client|/web)") != "" ]]; then
+#     BUILD_LIST+=("web")
+#     RUN_LIST+=("web")
+# fi
