@@ -1,0 +1,100 @@
+#! /bin/bash
+
+usage() {
+  echo " "
+  echo -e "\033[0;32mUsage:\033[0m"
+  echo " "
+  echo "    apply NAMESPACE [BUILD_ID]"
+  echo " "
+  echo "- NAMESPACE is the environment that you define for kubernetes."
+  echo "  It's a string like <test> or <production>"
+  echo " "
+  echo "- BUILD_ID is optional."
+  echo "  It can be the build number or a string that you have defined at build time"
+  echo " "
+  echo " "
+  echo "  ie: "
+  echo "      $0 test"
+  echo "      will start the environment test and apply last version"
+  echo " "
+  echo "      $0 mypersonalenv 628"
+  echo "      will start the environment mypersonalenv and apply version 628"
+  echo " "
+  echo " Just ensure that your build is stored on dockerhub by looking at one of the image"
+  echo "   https://hub.docker.com/u/adaptivetrader/dashboard/"
+  echo " "
+  exit 1
+}
+
+if [[ $# < 1 ]];then
+  usage
+fi
+namespace=$1
+build=${2:""}
+
+
+set -eo pipefail
+
+this_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+root_directory="${this_directory}/../.."
+kubectl_manifest_directory="deploy/kubernetes/manifests"
+
+kubectl="${root_directory}/deploy/clis/kubectl"
+
+# namespace
+{
+  ${this_directory}/templates//generate_ns_manifest $namespace;
+  ${kubectl} apply -f ${kubectl_manifest_directory}/ns.yml
+} || {
+  echo "Failed to apply $namespace namespace"
+  exit 1
+}
+
+# services
+svc=(
+  web
+  broker
+  eventstore
+)
+for manifest in ${svc[@]}; do
+  echo " "
+  echo "Appling $manifest service"
+  {
+    ${this_directory}/templates//generate_svc_manifest $manifest $namespace;
+    ${kubectl} apply -f ${kubectl_manifest_directory}/$manifest-svc.yml
+  } || {
+    echo " "
+    echo "Failed to apply $manifest service"
+  }
+done
+
+# replication controller
+controllers=(
+  blotter
+  broker
+  eventstore
+  pricing
+  referencedataread
+  tradeexecution
+  web
+  analytics
+)
+for manifest in ${svc[@]}; do
+  echo " "
+  echo "Appling $manifest replication controller"
+  {
+    ${this_directory}/templates//generate_rc_manifest $manifest $namespace;
+    ${kubectl} apply -f ${kubectl_manifest_directory}/$manifest-rc.yml
+  } || {
+    echo "Failed to apply $manifest replication controller"
+  }
+done
+
+sleep 2
+
+echo " "
+echo " "
+${this_directory}/describe $namespace
+echo " "
+echo " "
+echo " Wait a moment and run <describe $namespace> to see the PODS generated on your cluster"
