@@ -165,6 +165,26 @@ export class SimpleSession extends PureComponent<Props, State> {
 
       const data = JSON.parse(event.data)
 
+      if (console.table && data.result && data.result.interpreted_quote) {
+        const { hedge, terms, product_class, quantity, instrumentId, ...rest } = data.result.interpreted_quote
+        console.log(data.result)
+        console.table(
+          _.pickBy({
+            ...rest,
+            ..._.mapValues(
+              {
+                hedge,
+                terms,
+                product_class,
+                quantity,
+                instrumentId,
+              },
+              v => v && JSON.stringify(v).replace(/"\b|\b"/g, ''),
+            ),
+          }),
+        )
+      }
+
       this.props.onResult({
         data,
         transcripts: _.map(data.segments, 'clean_transcript').map(transcript => [{ transcript }]),
