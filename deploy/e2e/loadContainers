@@ -2,9 +2,12 @@
 
 echo "Loading containers"
 
-source ../touched.sh
+root_directory=$(realpath "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..")
+source ${root_directory}/deploy/config.sh
+source ${root_directory}/deploy/touched.sh
 
 mkdir -p ~/docker
+
 
 for name in ${PULL_LIST[@]}
 do
