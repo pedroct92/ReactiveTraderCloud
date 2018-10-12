@@ -13,7 +13,7 @@ echo "==============================="
 echo "Build ReactiveTrader containers"
 echo ""
 
-rroot_directory=$(realpath "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..")
+root_directory=$(readlink -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..")
 source ${root_directory}/deploy/touched.sh
 
 for container in ${BUILD_LIST[@]}

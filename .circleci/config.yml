@@ -41,7 +41,7 @@ jobs:
             source deploy/touched.sh
             echo "export CLIENT_TOUCHED=$CLIENT_TOUCHED" >> $BASH_ENV
             echo "export SERVER_TOUCHED=$SERVER_TOUCHED" >> $BASH_ENV
-            echo "export TOUCHED_FILES=$TOUCHED_FILES" >> $BASH_ENV
+
       - run:
           name: "Create artifacts and test results directories"
           command: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS

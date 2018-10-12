@@ -2,7 +2,7 @@
 
 echo "Loading containers"
 
-root_directory=$(realpath "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..")
+root_directory=$(readlink -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..")
 source ${root_directory}/deploy/config.sh
 source ${root_directory}/deploy/touched.sh
 
