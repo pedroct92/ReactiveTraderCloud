@@ -26,7 +26,7 @@ spec:
       containers:
       - name: "__SERVICE__"
         image: "__DOCKERIMAGE__"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
           - containerPort: 80
             name: "web"
