@@ -32,7 +32,6 @@ fi
 namespace=$1
 build=${2:-""}
 
-
 set -eo pipefail
 
 this_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

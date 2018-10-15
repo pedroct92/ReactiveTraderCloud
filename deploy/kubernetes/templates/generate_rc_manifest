@@ -7,9 +7,6 @@ if [[ $# < 2 ]];then
   exit 1
 fi
 
-# fail fast
-set -euo pipefail
-
 # load configuration
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../.."
 . ${root_directory}/deploy/config
@@ -18,7 +15,9 @@ root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../.."
 service=$1
 namespace=$2
 build=${3:-"latest"}
-patch_version=$3
+patch_version=${3:-""}
+
+set -euo pipefail
 
 service_name=$service
 server_services=${servers_alias[@]}
@@ -29,11 +28,11 @@ fi
 image_name=$(eval "echo \$${service_name}_container_image")
 major_version=$(eval "echo \$${service_name}_container_major")
 minor_version=$(eval "echo \$${service_name}_container_minor")
-version=$major_version.$minor_version${patch_version+".$patch_version"}
+version=$major_version.$minor_version${patch_version:+".$patch_version"}
 dockerimage=${image_name}:$version
 
 echo "Validating $dockerimage"
-if [[ $($root_directory/deploy/docker/list-tags $image_name | grep $version) == "" ]]; then
+if [[ $($root_directory/deploy/docker/list-tags $image_name | grep "$version\$") == "" ]]; then
   echo "Docker image not found for $image_name:$version"
 
   exit 1
