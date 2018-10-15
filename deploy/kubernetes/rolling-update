@@ -28,7 +28,7 @@ if listcontains "$serverServices" $service; then
   sourceName="$servers_container.$build";
 fi
 
-dockerImage=$(eval "echo \$${sourceName}Container").$build
+dockerImage=$(eval "echo \$${sourceName}_container").$build
 
 {
   echo ""

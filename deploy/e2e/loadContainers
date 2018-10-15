@@ -11,7 +11,7 @@ mkdir -p ~/docker
 
 for name in ${PULL_LIST[@]}
 do
-  tag=$(eval "echo \${"${name}Container"}")
+  tag=$(eval "echo \${"${name}_container"}")
   echo docker save ${tag}
   docker save ${tag} > ~/docker/$name.tar && echo "$name saved"
 done
