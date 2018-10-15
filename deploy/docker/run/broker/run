@@ -24,7 +24,7 @@ fi
 # start
 docker run -d --net=${docker_network} \
      --name ${container_name} \
-     $brokerContainer$build \
+     $broker_container$build \
      > ${this_directory}/container_id
 
 echo " "

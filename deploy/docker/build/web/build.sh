@@ -28,7 +28,7 @@ mkdir -p ${npminstall_build_dir}
 rm -rf ${npminstall_build_dir}/*
 cp -r ${root_directory}/src/client ${npminstall_build_dir}/
 cp ${npminstall_dir}/Dockerfile ${npminstall_build_dir}/Dockerfile
-sed -ie "s|__NODE_CONTAINER__|$nodeContainer|g" ${npminstall_build_dir}/Dockerfile
+sed -ie "s|__NODE_CONTAINER__|$node_container|g" ${npminstall_build_dir}/Dockerfile
 docker build --no-cache -t ${temp_image} ${npminstall_build_dir}/.
 
 if [[ "$(docker ps -q -a --filter name=${temp_container})" != "" ]]
@@ -62,10 +62,10 @@ cp ${nginx_dir}/dev.nginx.conf    ${nginx_build_dir}/dev.nginx.conf
 cp ${nginx_dir}/prod.nginx.conf   ${nginx_build_dir}/prod.nginx.conf
 cp -r ${this_directory}/build     ${nginx_build_dir}/dist
 
-sed -ie "s|__NGINX_CONTAINER__|$nginxContainer|g" ${nginx_build_dir}/Dockerfile
-sed -ie "s|__WEB_VERSION__|$webContainer_major.$webContainer_minor.$build|g" ${nginx_build_dir}/prod.nginx.conf
+sed -ie "s|__NGINX_CONTAINER__|$nginx_container|g" ${nginx_build_dir}/Dockerfile
+sed -ie "s|__WEB_VERSION__|$web_container_major.$web_container_minor.$build|g" ${nginx_build_dir}/prod.nginx.conf
 
-docker build --no-cache -t $webContainer  ${nginx_build_dir}/.
-docker tag $webContainer $webContainer.$build
+docker build --no-cache -t $web_container  ${nginx_build_dir}/.
+docker tag $web_container $web_container.$build
 
 rm -r ${this_directory}/build

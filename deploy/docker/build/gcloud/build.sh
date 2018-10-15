@@ -17,9 +17,9 @@ root_directory="${this_directory}/../../../.."
 mkdir -p ${this_directory}/build
 
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s|__DEBIAN_CONTAINER__|$debianContainer|g" ${this_directory}/build/Dockerfile
+sed -ie "s|__DEBIAN_CONTAINER__|$debian_container|g" ${this_directory}/build/Dockerfile
 
 cp ${this_directory}/template.install.sh ${this_directory}/build/install.sh
 
-docker build --no-cache -t $gcloudContainer ${this_directory}/build/.
-docker tag $gcloudContainer $gcloudContainer.$build
+docker build --no-cache -t $gcloud_container ${this_directory}/build/.
+docker tag $gcloud_container $gcloud_container.$build

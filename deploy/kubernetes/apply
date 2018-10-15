@@ -30,7 +30,7 @@ if [[ $# < 1 ]];then
   usage
 fi
 namespace=$1
-build=${2:""}
+build=${2:-""}
 
 
 set -eo pipefail
@@ -41,9 +41,12 @@ kubectl_manifest_directory="deploy/kubernetes/manifests"
 
 kubectl="${root_directory}/deploy/clis/kubectl"
 
+# clean up
+rm -rf "${this_directory}/manifests"
+
 # namespace
 {
-  ${this_directory}/templates//generate_ns_manifest $namespace;
+  ${this_directory}/templates/generate_ns_manifest $namespace;
   ${kubectl} apply -f ${kubectl_manifest_directory}/ns.yml
 } || {
   echo "Failed to apply $namespace namespace"
@@ -70,7 +73,7 @@ for manifest in ${svc[@]}; do
   echo ""
   echo "Appling $manifest service"
   {
-    ${this_directory}/templates//generate_svc_manifest $manifest $namespace;
+    ${this_directory}/templates/generate_svc_manifest $manifest $namespace $build;
     ${kubectl} apply -f ${kubectl_manifest_directory}/$manifest-svc.yml
   } || {
     echo ""
@@ -80,6 +83,7 @@ done
 
 # replication controller
 controllers=(
+  analytics
   blotter
   broker
   eventstore
@@ -87,13 +91,12 @@ controllers=(
   referencedataread
   tradeexecution
   web
-  analytics
 )
-for manifest in ${svc[@]}; do
+for manifest in ${controllers[@]}; do
   echo ""
   echo "Appling $manifest replication controller"
   {
-    ${this_directory}/templates//generate_rc_manifest $manifest $namespace;
+    ${this_directory}/templates/generate_rc_manifest $manifest $namespace $build;
     ${kubectl} apply -f ${kubectl_manifest_directory}/$manifest-rc.yml
   } || {
     echo "Failed to apply $manifest replication controller"
@@ -107,4 +110,4 @@ echo ""
 ${this_directory}/describe $namespace
 echo ""
 echo ""
-echo " Wait a moment and run <describe $namespace> to see the PODS generated on your cluster"
+echo " Wait a moment and run <${this_directory}/describe $namespace> to see the PODS generated on your cluster"

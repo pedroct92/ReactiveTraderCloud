@@ -3,85 +3,105 @@
 
 # VERSIONING
 # ==========
-vMajor="0"
-vMinor="0"
+major_version="0"
+minor_version="0"
 
 # Reactive Trader
-brokerContainer_major="0"
-brokerContainer_minor="0"
-brokerContainer="reactivetrader/broker:$brokerContainer_major.$brokerContainer_minor"
+broker_container_image="reactivetrader/broker"
+broker_container_major="0"
+broker_container_minor="0"
+broker_container="$broker_container_image:$broker_container_major.$broker_container_minor"
 
-populatedEventstoreContainer_major="0"
-populatedEventstoreContainer_minor="0"
-populatedEventstoreContainer="reactivetrader/eventstore:$populatedEventstoreContainer_major.$populatedEventstoreContainer_minor"
+populatedeventstore_container_image="reactivetrader/eventstore"
+populatedeventstore_container_major="0"
+populatedeventstore_container_minor="0"
+populatedeventstore_container="$populatedeventstore_container_image:$populatedeventstore_container_major.$populatedeventstore_container_minor"
 
-serversContainer_major="0"
-serversContainer_minor="1"
-serversContainer="reactivetrader/servers:$serversContainer_major.$serversContainer_minor"
+servers_alias=(analytics blotter pricing referencedataread tradeexecution)
+servers_container_image="reactivetrader/servers"
+servers_container_major="0"
+servers_container_minor="1"
+servers_container="$servers_container_image:$servers_container_major.$servers_container_minor"
 
-webContainer_major="0"
-webContainer_minor="0"
-webContainer="reactivetrader/web:$webContainer_major.$webContainer_minor"
-web_container="reactivetrader/web:$webContainer_major.$webContainer_minor"
+web_container_image="reactivetrader/web"
+web_container_major="0"
+web_container_minor="0"
+web_container="$web_container_image:$web_container_major.$web_container_minor"
 
+ubuntu_container_image="ubuntu:14"
 # Other containers
+debian_container_image="debian:8"
 # OS
-ubuntuContainer="ubuntu:14.04.2"
-debianContainer="debian:8.2"
+ubuntu_container="$ubuntu_container_image.04.2"
+debian_container="$debian_container_image.2"
 
 # crossbar
-vCrossbar="17.5.1"
-crossbarContainer_major="17"
-crossbarContainer_minor="5"
-crossbarContainer="weareadaptive/crossbar:$crossbarContainer_major.$crossbarContainer_minor"
+crossbar_version="17.5.1"
+crossbar_container_image="weareadaptive/crossbar"
+crossbar_container_major="17"
+crossbar_container_minor="5"
+crossbar_container="$crossbar_container_image:$crossbar_container_major.$crossbar_container_minor"
 
 # eventstore
-vEventstore="3.3.0"
-eventstoreContainer_major="0"
-eventstoreContainer_minor="0"
-eventstoreContainer="weareadaptive/eventstore:$eventstoreContainer_major.$eventstoreContainer_minor"
+eventstore_version="3.3.0"
+eventstore_container_image="weareadaptive/eventstore"
+eventstore_container_major="0"
+eventstore_container_minor="0"
+eventstore_container="$eventstore_container_image:$eventstore_container_major.$eventstore_container_minor"
 
 # node
-vNode="8"
-nodeContainer_major="8"
-nodeContainer_minor=""
-nodeContainer="node:$nodeContainer_major"
+node_version="8"
+node_container_image="node"
+node_container_major="8"
+node_container_minor=""
+node_container="$node_container_image:$node_container_major"
 
-# nginx
-vNginx="1.12.0"
-officialNginxContainer="nginx:$vNginx"
-nginxContainer_major="1"
-nginxContainer_minor="12"
-nginxContainer="weareadaptive/nginx:$nginxContainer_major.$nginxContainer_minor"
+# nginx source
+nginx_version="1.12.0"
+nginxsource_container_image="nginx"
+nginxsource_container_major="1"
+nginxsource_container_minor="12"
+nginxsource_container="$nginxsource_container_image:$nginx_version"
+
+# nginx container
+nginx_container_image="weareadaptive/nginx"
+nginx_container_major="1"
+nginx_container_minor="12"
+nginx_container="$nginx_container_image:$nginx_container_major.$nginx_container_minor"
 
 # dotnet
-dotnetversion="dotnet-sdk-2.0.0"
-dotnetContainer_major="2"
-dotnetContainer_minor="0"
-dotnetContainer="weareadaptive/dotnet:$dotnetContainer_major.$dotnetContainer_minor"
+dotnet_apt_package="dotnet-sdk-2.0.0"
+dotnet_container_image="weareadaptive/dotnet"
+dotnet_container_major="2"
+dotnet_container_minor="0"
+dotnet_container="$dotnet_container_image:$dotnet_container_major.$dotnet_container_minor"
 
 # TestTool
-vJq="1.5"
-testtools_major="1"
-testtools_minor="1"
-testtoolsContainer_base="weareadaptive/testtools"
-testtoolsContainer="$testtoolsContainer_base:$testtools_major.$testtools_minor"
-testtoolsContainer_latest="$testtoolsContainer_base:latest"
+jq_version="1.5"
+testtools_container_image="weareadaptive/testtools"
+testtools_container_major="1"
+testtools_container_minor="1"
+testtools_container="$testtools_container_image:$testtools_container_major.$testtools_container_minor"
+testtools_container_latest="$testtools_container_image:latest"
 
 # gcloud
-gcloudContainer_major="1"
-gcloudContainer_minor="2"
-gcloudContainer="weareadaptive/gcloud:$gcloudContainer_major.$gcloudContainer_minor"
+gcloud_container_image="weareadaptive/gcloud"
+gcloud_container_major="1"
+gcloud_container_minor="2"
+gcloud_container="$gcloud_container_image:$gcloud_container_major.$gcloud_container_minor"
 
-# Clusters Access
 # nsgate
-nsGateContainer_major="0"
-nsGateContainer_minor="2"
-nsGateContainer="weareadaptive/nsgate:$nsGateContainer_major.$nsGateContainer_minor"
+nsgate_container_image="weareadaptive/nsgate"
+nsgate_container_major="0"
+nsgate_container_minor="2"
+nsgate_container="$nsgate_container_image:$nsgate_container_major.$nsgate_container_minor"
 
-minikubegate_major="0"
-minikubegate_minor="0"
-minikubegate_image="weareadaptive/minikubegate:$minikubegate_major.$minikubegate_minor"
+# minikube
+minikubegate_container_image="weareadaptive/minikubegate"
+minikubegate_container_major="0"
+minikubegate_container_minor="0"
+minikubegate_container="$minikubegate_container_image:$minikubegate_container_major.$minikubegate_container_minor"
+
 
 # GCLOUD
 # ======

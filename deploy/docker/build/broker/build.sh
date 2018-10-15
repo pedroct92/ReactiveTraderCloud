@@ -17,10 +17,10 @@ root_directory="${this_directory}/../../../.."
 # create Dockerfile
 mkdir -p "${this_directory}/build"
 cp  ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s|__CROSSBAR_CONTAINER__|$crossbarContainer|g" ${this_directory}/build/Dockerfile
+sed -ie "s|__CROSSBAR_CONTAINER__|$crossbar_container|g" ${this_directory}/build/Dockerfile
 
 # get files from project
 cp -r ${root_directory}/src/server/.crossbar  ${this_directory}/build/.crossbar
 
-docker build --no-cache -t $brokerContainer ${this_directory}/build/.
-docker tag $brokerContainer $brokerContainer.$build
+docker build --no-cache -t $broker_container ${this_directory}/build/.
+docker tag $broker_container $broker_container.$build

@@ -17,8 +17,8 @@ root_directory="${this_directory}/../../../.."
 # Dockerfile
 mkdir -p ${this_directory}/build
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s|__OFFICIAL_NGINX_CONTAINER__|$officialNginxContainer|g" ${this_directory}/build/Dockerfile
+sed -ie "s|__OFFICIAL_NGINX_CONTAINER__|$nginxsource_container|g" ${this_directory}/build/Dockerfile
 
 # build image
-docker build --no-cache -t $nginxContainer ${this_directory}/build/.
-docker tag $nginxContainer $nginxContainer.$build
+docker build --no-cache -t $nginx_container ${this_directory}/build/.
+docker tag $nginx_container $nginx_container.$build

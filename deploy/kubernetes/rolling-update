@@ -25,7 +25,7 @@ kubectl="${root_directory}/deploy/clis/kubectl"
 sourceName=$service
 serverServices="analytics blotter pricing referencedataread tradeexecution"
 if listcontains "$serverServices" $service; then
-  sourceName="$serversContainer.$build";
+  sourceName="$servers_container.$build";
 fi
 
 dockerImage=$(eval "echo \$${sourceName}Container").$build

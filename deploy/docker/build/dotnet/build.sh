@@ -17,10 +17,10 @@ root_directory="${this_directory}/../../../.."
 mkdir -p ${this_directory}/build
 
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s|__UBUNTU_CONTAINER__|$ubuntuContainer|g" ${this_directory}/build/Dockerfile
+sed -ie "s|__UBUNTU_CONTAINER__|$ubuntu_container|g" ${this_directory}/build/Dockerfile
 
 cp ${this_directory}/template.install.sh ${this_directory}/build/install.sh
-sed -ie "s/__DOTNET_VERSION__/$dotnetversion/g" ${this_directory}/build/install.sh
+sed -ie "s/__DOTNET_APT_PACKAGE__/$dotnet_apt_package/g" ${this_directory}/build/install.sh
 
-docker build --no-cache -t $dotnetContainer ${this_directory}/build/.
-docker tag $dotnetContainer $dotnetContainer.$build
+docker build --no-cache -t $dotnet_container ${this_directory}/build/.
+docker tag $dotnet_container $dotnet_container.$build

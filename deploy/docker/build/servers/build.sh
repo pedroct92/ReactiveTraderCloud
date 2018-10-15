@@ -21,7 +21,7 @@ fi
 mkdir -p ${this_directory}/build
 cp -r ${root_directory}/src/server ${this_directory}/build/
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s|__DOTNET_CONTAINER__|$dotnetContainer|g" ${this_directory}/build/Dockerfile
+sed -ie "s|__DOTNET_CONTAINER__|$dotnet_container|g" ${this_directory}/build/Dockerfile
 
 # build
 docker build --no-cache -t weareadaptive/serverssrc:$build ${this_directory}/build/.
@@ -38,8 +38,8 @@ build_command="${build_command} && dotnet build --configuration Release"
 docker run -t --name ${container_name} -v /${this_directory}/dotnetcache:/packages weareadaptive/serverssrc:$build bash -c "${build_command}"
 
 # commit
-docker commit ${container_name} $serversContainer
-docker tag $serversContainer $serversContainer.$build
+docker commit ${container_name} $servers_container
+docker tag $servers_container $servers_container.$build
 
 # clean
 if [[ "$(docker ps -q -a --filter name=${container_name})" != "" ]]

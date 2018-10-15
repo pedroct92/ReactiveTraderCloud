@@ -11,4 +11,4 @@ root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
 docker run --rm -ti \
   -v rtc-gcloud-config:/root/.config \
   -v rtc-kubectl-config:/root/.kube \
-  ${gcloudContainer} gcloud $@
+  ${gcloud_container} gcloud $@

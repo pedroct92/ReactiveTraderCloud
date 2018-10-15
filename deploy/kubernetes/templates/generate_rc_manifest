@@ -6,63 +6,49 @@ if [[ $# < 2 ]];then
   echo "  $0 SERVICE NAMESPACE [BUILD_ID]"
   exit 1
 fi
-service=$1
-namespace=$2
-if [[ $3 == "" ]];then
-  build="latest"
-  buildTag=""
-else
-  build=$3
-  buildTag=".$3"
-fi
 
 # fail fast
 set -euo pipefail
 
-# load configuration and libs
+# load configuration
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../.."
 . ${root_directory}/deploy/config
 . ${root_directory}/deploy/kubernetes/helpers/functions.sh
 
-# get good docker image
-dockerImage=""
-if [ $service == "nsgate" ];then
-  dockerImage="$nsGateContainer$buildTag";
-  vMajor=$nsGateContainer_major
-  vMinor=$nsGateContainer_minor
-fi
-if [[ $service == "broker" ]];then
-  dockerImage="$brokerContainer$buildTag";
-  vMajor=$brokerContainer_major
-  vMinor=$brokerContainer_minor
-fi
-if [[ $service == "web" ]];then
-  dockerImage="$webContainer$buildTag";
-  vMajor=$webContainer_major
-  vMinor=$webContainer_minor
-fi
-if [[ $service == "eventstore" ]];then
-  dockerImage="$populatedEventstoreContainer$buildTag";
-  vMajor=$populatedEventstoreContainer_major
-  vMinor=$populatedEventstoreContainer_minor
+service=$1
+namespace=$2
+build=${3:-"latest"}
+patch_version=$3
+
+service_name=$service
+server_services=${servers_alias[@]}
+if listcontains "$server_services" $service; then
+  service_name="servers"
 fi
 
-dotnetServices="analytics blotter pricing referencedataread tradeexecution"
-if listcontains "$dotnetServices" $service; then
-  dockerImage="$serversContainer$buildTag";
-  vMajor=$serversContainer_major
-  vMinor=$serversContainer_minor
-fi
+image_name=$(eval "echo \$${service_name}_container_image")
+major_version=$(eval "echo \$${service_name}_container_major")
+minor_version=$(eval "echo \$${service_name}_container_minor")
+version=$major_version.$minor_version${patch_version+".$patch_version"}
+dockerimage=${image_name}:$version
 
-# create manifest from template
-manifests_directory="${root_directory}/deploy/kubernetes/manifests"
-mkdir -p ${manifests_directory}
-replication_controller_manifest="${manifests_directory}/${service}-rc.yml"
-cp ${root_directory}/deploy/kubernetes/templates/${service}/rc.yml ${replication_controller_manifest}
+echo "Validating $dockerimage"
+if [[ $($root_directory/deploy/docker/list-tags $image_name | grep $version) == "" ]]; then
+  echo "Docker image not found for $image_name:$version"
 
-sed -ie  "s/__SERVICE__/$service/g" ${replication_controller_manifest}
-sed -ie  "s/__MAJOR__/$vMajor/g" ${replication_controller_manifest}
-sed -ie  "s/__MINOR__/$vMinor/g" ${replication_controller_manifest}
-sed -ie  "s/__BUILD__/$build/g" ${replication_controller_manifest}
-sed -ie  "s|__DOCKERIMAGE__|$dockerImage|g" ${replication_controller_manifest}
-sed -ie  "s/__NAMESPACE__/$namespace/g" ${replication_controller_manifest}
+  exit 1
+else
+  echo "Creating manifest for $dockerimage"
+
+  manifests_directory="${root_directory}/deploy/kubernetes/manifests"
+  mkdir -p ${manifests_directory}
+  replication_controller_manifest="${manifests_directory}/${service}-rc.yml"
+  cp ${root_directory}/deploy/kubernetes/templates/${service}/rc.yml ${replication_controller_manifest}
+
+  sed -ie  "s/__SERVICE__/$service/g" ${replication_controller_manifest}
+  sed -ie  "s/__MAJOR__/$major_version/g" ${replication_controller_manifest}
+  sed -ie  "s/__MINOR__/$minor_version/g" ${replication_controller_manifest}
+  sed -ie  "s/__BUILD__/$build/g" ${replication_controller_manifest}
+  sed -ie  "s|__DOCKERIMAGE__|$dockerimage|g" ${replication_controller_manifest}
+  sed -ie  "s/__NAMESPACE__/$namespace/g" ${replication_controller_manifest}
+fi;

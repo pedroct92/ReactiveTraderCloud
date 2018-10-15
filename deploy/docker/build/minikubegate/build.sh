@@ -22,9 +22,9 @@ mkdir -p ${this_directory}/build
 cp ${this_directory}/template.nginx.conf    ${this_directory}/build/nginx.conf
 cp ${this_directory}/template.Dockerfile    ${this_directory}/build/Dockerfile
 
-minikubegate_version="$minikubegate_major.$minikubegate_minor.$build"
-sed -ie "s|__NGINX_CONTAINER__|$nginxContainer|g"               ${this_directory}/build/Dockerfile
+minikubegate_version="$minikubegate_container_major.$minikubegate_container_minor.$build"
+sed -ie "s|__NGINX_CONTAINER__|$nginx_container|g"               ${this_directory}/build/Dockerfile
 sed -ie "s/__MINIKUBEGATE_VERSION__/$minikubegate_version/g"    ${this_directory}/build/nginx.conf
 
-docker build --no-cache -t $minikubegate_image ${this_directory}/build/.
-docker tag $minikubegate_image $minikubegate_image.$build
+docker build --no-cache -t $minikubegate_container ${this_directory}/build/.
+docker tag $minikubegate_container $minikubegate_container.$build

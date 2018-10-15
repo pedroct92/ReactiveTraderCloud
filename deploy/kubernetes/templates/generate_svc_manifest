@@ -22,16 +22,16 @@ service_manifest="${manifests_directory}/${service}-svc.yml"
 cp ${this_directory}/${service}/svc.yml ${service_manifest}
 
 if [[ ${service} == "broker" ]];then
-    vMajor=${brokerContainer_major}
-    vMinor=${brokerContainer_minor}
+    major_version=${broker_container_major}
+    minor_version=${broker_container_minor}
 fi
 if [[ ${service} == "web" ]];then
-    vMajor=${webContainer_major}
-    vMinor=${webContainer_minor}
+    major_version=${web_container_major}
+    minor_version=${web_container_minor}
 fi
 if [[ ${service} == "eventstore" ]];then
-    vMajor=${populatedEventstoreContainer_major}
-    vMinor=${populatedEventstoreContainer_minor}
+    major_version=${populatedeventstore_container_major}
+    minor_version=${populatedeventstore_container_minor}
 fi
 if [[ ${service} == "nsgate" ]];then
     cluster=`${root_directory}/deploy/clis/kubectl config current-context`
@@ -47,11 +47,11 @@ fi
 
 dotnetServices="analytics blotter pricing referencedataread tradeexecution"
 if listcontains "${dotnetServices}" ${service}; then
-    vMajor=${serversContainer_major}
-    vMinor=${serversContainer_minor}
+    major_version=${servers_container_major}
+    minor_version=${servers_container_minor}
 fi
 
 sed -ie "s/__SERVICE__/${service}/g"     ${service_manifest}
-sed -ie "s/__MAJOR__/${vMajor}/g"        ${service_manifest}
-sed -ie "s/__MINOR__/${vMinor}/g"        ${service_manifest}
+sed -ie "s/__MAJOR__/${major_version}/g"        ${service_manifest}
+sed -ie "s/__MINOR__/${minor_version}/g"        ${service_manifest}
 sed -ie "s/__NAMESPACE__/${namespace}/g" ${service_manifest}

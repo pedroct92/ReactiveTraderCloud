@@ -1,0 +1,64 @@
+#! /bin/bash
+
+if [[ $# < 1 ]]; then
+  echo -e "\033[0;32mUsage:\033[0m"
+  echo "  $0 PATCH_VERSION"
+  echo " "
+  exit 1
+fi
+
+set -euo pipefail
+
+# load configuration
+root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
+kubectl="${root_directory}/deploy/clis/kubectl"
+. ${root_directory}/deploy/config
+
+# specify service
+namespace="nsgate"
+service_name="nsgate"
+
+# read from configuration
+
+image_name=$(eval "echo \$${service_name}_container_image")
+major_version=$(eval "echo \$${service_name}_container_major")
+minor_version=$(eval "echo \$${service_name}_container_minor")
+patch_version=$1
+version=$major_version.$minor_version${1+".$1"}
+dockerimage=${image_name}:$version
+
+echo "Validating docker image: $dockerimage"
+if [[ $("$root_directory/deploy/docker/list-tags" $image_name | grep $version) == "" ]]; then
+  echo "Docker image not found for $dockerimage"
+  exit 1
+else
+  echo "Deploying $service_name instance with $dockerimage"
+
+
+  # create source and target
+  manifest_source="$root_directory/deploy/kubernetes/templates/$service_name/rc.yml"
+  manifest_target_path="deploy/kubernetes/manifests"
+  manifest_target_filepath="$manifest_target_path/$service_name-rc.yml"
+
+  mkdir -p $root_directory/$manifest_target_path
+  cp -f $manifest_source $root_directory/$manifest_target_filepath
+
+  # update target for template fields
+  sed -ie "s/__MAJOR__/$nsgate_container_major/g" $root_directory/$manifest_target_filepath
+  sed -ie "s/__MINOR__/$nsgate_container_minor/g" $root_directory/$manifest_target_filepath
+  sed -ie "s/__BUILD__/$patch_version/g" $root_directory/$manifest_target_filepath
+  sed -ie "s|__DOCKERIMAGE__|$dockerimage|g" $root_directory/$manifest_target_filepath
+  sed -ie "s/__NAMESPACE__/$namespace/g" $root_directory/$manifest_target_filepath
+
+  # deploy on kubernetes
+  ${kubectl} apply -f $manifest_target_filepath
+
+  # get the namespace informations
+  describe="$root_directory/deploy/kubernetes/describe"
+  echo " "
+  echo " "
+  ${describe} ${namespace}
+  echo " "
+  echo " "
+  echo " Wait a moment and run <${describe} ${namespace}> to see the PODS generated on your cluster"
+fi;

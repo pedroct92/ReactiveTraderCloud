@@ -25,7 +25,7 @@ export TOUCHED_FILES=$(git diff --name-only --diff-filter=ADMR $COMMIT~..@)
 if [[ $(echo $TOUCHED_FILES | grep "^src/server") != "" ]]; then
     LOAD_LIST+=("dotnet" "crossbar" "eventstore")
     LOAD_LIST+=("dotnet" "crossbar" "eventstore")
-    BUILD_LIST+=("servers" "broker" "populatedEventstore")
+    BUILD_LIST+=("servers" "broker" "populatedeventstore")
     RUN_LIST+=("eventstore" "broker" "referencedataread" "pricing" "tradeexecution" "blotter" "analytics")
 fi;
 

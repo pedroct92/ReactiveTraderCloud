@@ -93,7 +93,7 @@ jobs:
           name: "Running tests"
           command: |
             if [ $SERVER_TOUCHED == 1 ]; then
-                . ./deploy/config && docker run -a STDOUT --net=host $serversContainer.$BUILD_ID bash -c "dotnet test --configuration Release ./Adaptive.ReactiveTrader.Server.IntegrationTests/Adaptive.ReactiveTrader.Server.IntegrationTests.csproj"
+                . ./deploy/config && docker run -a STDOUT --net=host $servers_container.$BUILD_ID bash -c "dotnet test --configuration Release ./Adaptive.ReactiveTrader.Server.IntegrationTests/Adaptive.ReactiveTrader.Server.IntegrationTests.csproj"
             fi;
       # SAVE RESULTS
       - store_test_results:

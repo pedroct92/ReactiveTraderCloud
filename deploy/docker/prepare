@@ -6,7 +6,7 @@ set -euo pipefail
 # CONFIGURATION
 # =============
 possible_commands="build push"
-rtc="servers broker web populatedEventstore"
+rtc="servers broker web populatedeventstore"
 possible_groups="rtc gcloud dotnet nginx node testtools crossbar eventstore nsgate minikubegate ${rtc}"
 
 # USAGE

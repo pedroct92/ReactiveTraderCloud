@@ -18,9 +18,9 @@ mkdir -p ${this_directory}/build
 
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
 
-sed -ie "s/__UBUNTU_CONTAINER__/$ubuntuContainer/g" ${this_directory}/build/Dockerfile
-sed -ie "s/__VJQ__/$vJq/g"                          ${this_directory}/build/Dockerfile
+sed -ie "s/__UBUNTU_CONTAINER__/$ubuntu_container/g" ${this_directory}/build/Dockerfile
+sed -ie "s/__JQ_VERSION__/$jq_version/g"                          ${this_directory}/build/Dockerfile
 
-docker build --no-cache -t $testtoolsContainer ${this_directory}/build/.
-docker tag $testtoolsContainer $testtoolsContainer.$build
-docker tag $testtoolsContainer $testtoolsContainer_latest
+docker build --no-cache -t $testtools_container ${this_directory}/build/.
+docker tag $testtools_container $testtools_container.$build
+docker tag $testtools_container $testtools_container_latest

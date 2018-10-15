@@ -13,5 +13,5 @@ set -euo pipefail
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../.."
 . ${root_directory}/deploy/config
 
-docker push $dotnetContainer
-docker push $dotnetContainer.$build
+docker push $dotnet_container
+docker push $dotnet_container.$build

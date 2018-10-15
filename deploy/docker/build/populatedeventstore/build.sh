@@ -16,16 +16,16 @@ root_directory="${this_directory}/../../../.."
 
 # run eventstore
 eventstore_id_file="${this_directory}/eventstore_id"
-docker run -d --net=host $eventstoreContainer > ${eventstore_id_file}
+docker run -d --net=host $eventstore_container > ${eventstore_id_file}
 
 # populate it
 populate_command=`cat "${root_directory}/src/server/Populate Event Store.bat"`
 docker run -t --net=host      \
-     $serversContainer.$build \
+     $servers_container.$build \
      ${populate_command}
 
 # commit container
-docker commit `cat ${eventstore_id_file}` $populatedEventstoreContainer
-docker tag $populatedEventstoreContainer $populatedEventstoreContainer.$build
+docker commit `cat ${eventstore_id_file}` $populatedeventstore_container
+docker tag $populatedeventstore_container $populatedeventstore_container.$build
 
 docker kill `cat ${eventstore_id_file}`

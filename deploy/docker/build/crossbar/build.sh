@@ -17,8 +17,8 @@ root_directory="${this_directory}/../../../.."
 mkdir -p ${this_directory}/build
 
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s/__UBUNTU_CONTAINER__/$ubuntuContainer/g" ${this_directory}/build/Dockerfile
-sed -ie "s/__CROSSBAR_VERSION__/$vCrossbar/g" ${this_directory}/build/Dockerfile
+sed -ie "s/__UBUNTU_CONTAINER__/$ubuntu_container/g" ${this_directory}/build/Dockerfile
+sed -ie "s/__CROSSBAR_VERSION__/$crossbar_version/g" ${this_directory}/build/Dockerfile
 
-docker build --no-cache -t $crossbarContainer ${this_directory}/build/.
-docker tag $crossbarContainer $crossbarContainer.$build
+docker build --no-cache -t $crossbar_container ${this_directory}/build/.
+docker tag $crossbar_container $crossbar_container.$build

@@ -14,4 +14,4 @@ docker run --rm -ti \
   -v rtc-gcloud-config:/root/.config \
   -v rtc-kubectl-config:/root/.kube \
   -w //root_directory \
-  ${gcloudContainer} kubectl $@
+  ${gcloud_container} kubectl $@

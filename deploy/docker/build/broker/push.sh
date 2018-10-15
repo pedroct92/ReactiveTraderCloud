@@ -13,5 +13,5 @@ set -euo pipefail
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../.."
 . ${root_directory}/deploy/config
 
-docker push $brokerContainer
-docker push $brokerContainer.$build
+docker push $broker_container
+docker push $broker_container.$build

@@ -21,18 +21,18 @@ root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
 
 dockerImage=""
 if [[ $service == "broker" ]];then
-  dockerImage="$brokerContainer.$build";
+  dockerImage="$broker_container.$build";
 fi
 if [[ $service == "web" ]];then
-  dockerImage="$webContainer.$build";
+  dockerImage="$web_container.$build";
 fi
 if [[ $service == "eventstore" ]];then
-  dockerImage="$populatedEventstoreContainer.$build";
+  dockerImage="$populatedeventstore_container.$build";
 fi
 
 dotnetServices="analytics blotter pricing referencedataread tradeexecution"
 if listcontains "$dotnetServices" $service; then
-  dockerImage="$serversContainer.$build";
+  dockerImage="$servers_container.$build";
 fi
 
 kubectl="${root_directory}/deploy/clis/kubectl"

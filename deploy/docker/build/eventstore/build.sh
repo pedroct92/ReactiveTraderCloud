@@ -17,11 +17,11 @@ root_directory="${this_directory}/../../../.."
 mkdir -p ${this_directory}/build
 
 cp ${this_directory}/template.Dockerfile ${this_directory}/build/Dockerfile
-sed -ie "s/__UBUNTU_CONTAINER__/$ubuntuContainer/g" ${this_directory}/build/Dockerfile
-sed -ie "s/__VEVENTSTORE__/$vEventstore/g" ${this_directory}/build/Dockerfile
+sed -ie "s/__UBUNTU_CONTAINER__/$ubuntu_container/g" ${this_directory}/build/Dockerfile
+sed -ie "s/__EVENTSTORE_VERSION__/$eventstore_version/g" ${this_directory}/build/Dockerfile
 
 cp ${this_directory}/template.install.sh ${this_directory}/build/install.sh
-sed -ie "s/__VEVENTSTORE__/$vEventstore/g" ${this_directory}/build/install.sh
+sed -ie "s/__EVENTSTORE_VERSION__/$eventstore_version/g" ${this_directory}/build/install.sh
 
-docker build --no-cache -t $eventstoreContainer ${this_directory}/build/.
-docker tag $eventstoreContainer $eventstoreContainer.$build
+docker build --no-cache -t $eventstore_container ${this_directory}/build/.
+docker tag $eventstore_container $eventstore_container.$build

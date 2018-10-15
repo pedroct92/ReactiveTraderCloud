@@ -15,5 +15,5 @@ set -euo pipefail
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../.."
 . ${root_directory}/deploy/config
 
-docker push $minikubegate_image
-docker push $minikubegate_image.$build
+docker push $minikubegate_container
+docker push $minikubegate_container.$build

@@ -7,7 +7,7 @@ sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotne
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
 sudo apt-get -y install apt-transport-https
 sudo apt-get update
-sudo apt-get -y install __DOTNET_VERSION__
+sudo apt-get -y install __DOTNET_APT_PACKAGE__
 
 # Clean
 apt-get autoremove -y

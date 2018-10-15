@@ -14,5 +14,5 @@ root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../.."
 . ${root_directory}/deploy/config
 
 # build
-docker push $nginxContainer
-docker push $nginxContainer.$build
+docker push $nginx_container
+docker push $nginx_container.$build

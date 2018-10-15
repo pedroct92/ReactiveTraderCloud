@@ -13,5 +13,5 @@ set -euo pipefail
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../.."
 . ${root_directory}/deploy/config
 
-docker push $gcloudContainer
-docker push $gcloudContainer.$build
+docker push $gcloud_container
+docker push $gcloud_container.$build

@@ -26,10 +26,10 @@ cp ${this_directory}/template.Dockerfile        ${this_directory}/build/Dockerfi
 cp ${this_directory}/template.updateServers.sh  ${this_directory}/build/updateServers.sh
 cp ${this_directory}/template.writeFunctions.sh ${this_directory}/build/writeFunctions.sh
 
-sed -ie "s|__NGINX_CONTAINER__|$nginxContainer|g" ${this_directory}/build/Dockerfile
-nsgate_version="$nsGateContainer_major.$nsGateContainer_minor.$build"
+sed -ie "s|__NGINX_CONTAINER__|$nginx_container|g" ${this_directory}/build/Dockerfile
+nsgate_version="$nsgate_container_major.$nsgate_container_minor.$build"
 sed -ie "s/__NSGATE_VERSION__/$nsgate_version/g" ${this_directory}/build/writeFunctions.sh
 sed -ie "s/__NSGATE_VERSION__/$nsgate_version/g" ${this_directory}/build/nginx.conf
 
-docker build --no-cache -t $nsGateContainer ${this_directory}/build/.
-docker tag $nsGateContainer $nsGateContainer.$build
+docker build --no-cache -t $nsgate_container ${this_directory}/build/.
+docker tag $nsgate_container $nsgate_container.$build

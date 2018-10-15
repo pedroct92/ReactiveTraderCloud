@@ -11,9 +11,9 @@ fi
 build_number="${1}"
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
 prepare="${root_directory}/deploy/docker/prepare"
-replaceNsGate="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../kubernetes/replaceNsGate"
+replace-nsgate="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../kubernetes/replace-nsgate"
 service="nsgate"
 
 ${prepare} build ${service} ${build_number} &&
 ${prepare} push ${service} ${build_number} &&
-${replaceNsGate} ${build_number}
+${replace-nsgate} ${build_number}

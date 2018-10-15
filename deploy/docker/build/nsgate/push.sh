@@ -15,5 +15,5 @@ set -euo pipefail
 root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../.."
 . ${root_directory}/deploy/config
 
-docker push $nsGateContainer
-docker push $nsGateContainer.$build
+docker push $nsgate_container
+docker push $nsgate_container.$build
