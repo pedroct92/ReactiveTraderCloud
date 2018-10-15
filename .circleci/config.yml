@@ -28,6 +28,7 @@ jobs:
               BUILD_LABEL="develop"
             elif [ "${CIRCLE_BRANCH}" == "test" ]; then
               DEPLOY=1
+              DEPLOY_TARGET="beta"
               BUILD_LABEL="test"
             fi
 
@@ -109,6 +110,9 @@ jobs:
           command: |
             if [ $DEPLOY == 1 ]; then
               cd deploy/e2e && ./pushContainers $BUILD_ID
+            fi
+            if [ $DEPLOY_TARGET != "" ]; then
+              ./deploy/kubernetes/apply $DEPLOY_TARGET
             fi
 
 # workflows:
