@@ -24,7 +24,7 @@ spec:
 
       containers:
         - name: "greenkey-custom-intents"
-          image: "reactivetrader/greenkey-custom-intents:0.0.1"
+          image: "reactivetrader/greenkey-custom-intents:0.0.3"
           volumeMounts:
             - name: greenkey-cache-volume
               subPath: 'custom'
