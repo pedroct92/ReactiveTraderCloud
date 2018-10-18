@@ -23,6 +23,13 @@ spec:
           emptyDir: {}
 
       containers:
+        - name: "greenkey-custom-intents"
+          image: "reactivetrader/greenkey-custom-intents:0.0.1"
+          volumeMounts:
+            - name: greenkey-cache-volume
+              subPath: 'custom'
+              mountPath: '/corporate_bonds/custom'
+
         - name: "greenkey-scribe-license"
           image: "docker.greenkeytech.com/scribelicense"
           imagePullPolicy: IfNotPresent
@@ -48,16 +55,23 @@ spec:
           imagePullPolicy: IfNotPresent
 
           env:
-            - name: PRODUCT_CLASS
-              value: "{{greenkey.scribe.product_class}}"
+            # - name: PRODUCT_CLASS
+            #   value: "{{greenkey.scribe.product_class}}"
             - name: DATA_OUT
               value: "/data"
             - name: MODEL_TYPE
               value: "'tradervoice'"
             - name: USERS
               value: "2"
-            - name: QUOTE_ACTIVATION_KEYWORD
-              value: "confirm"
+            # - name: QUOTE_ACTIVATION_KEYWORD
+            #   value: "confirm"
+            - name: DISCOVERY_INTENTS
+              value: "corporate_bonds"
+            - name: DISCOVERY_DOMAINS
+              value: "sales_trader"
+            - name: DISCOVERY
+              value: "True"
+
 
           volumeMounts:
             - name: greenkey-cache-volume
@@ -72,6 +86,9 @@ spec:
             - name: greenkey-cache-volume
               subPath: data
               mountPath: /data
+            - name: greenkey-cache-volume
+              subPath: custom
+              mountPath: /custom
 
           ports:
             - name: "greenkey-scribe"

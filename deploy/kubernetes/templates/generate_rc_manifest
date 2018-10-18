@@ -20,9 +20,13 @@ patch_version=${3:-""}
 set -euo pipefail
 
 service_name=$service
+
+# Warning: some wakadoo aliasing under way
 server_services=${servers_alias[@]}
 if listcontains "$server_services" $service; then
   service_name="servers"
+elif [[ $service_name == "eventstore" ]]; then
+  service_name=populatedeventstore
 fi
 
 image_name=$(eval "echo \$${service_name}_container_image")

@@ -1,19 +1,18 @@
 #! /bin/bash
 
 if [[ $1 == "" ]];then
-  echo "The build number is required for this step"
+  echo "A build id is required for this step"
   exit 1
 fi
 build=$1
 
 set -eo pipefail
 
-root_directory=$(readlink -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..")
-source ${root_directory}/deploy/touched.sh
-. ${root_directory}/deploy/config
+root_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+source $root_directory/deploy/touched.sh
+. $root_directory/deploy/config
 
 docker login -u $DOCKER_USER -p $DOCKER_PASS
-
 for service in ${BUILD_LIST[@]}
 do
   image_name=$(eval "echo \$${service}_container_image")
@@ -21,8 +20,13 @@ do
   minor_version=$(eval "echo \$${service}_container_minor")
   version=$major_version.$minor_version${build:+".$build"}
 
+  echo "docker push $image_name:$version"
   docker push $image_name:$version
-  if [[ $CIRCLE_BRANCH == "develop" ]]; then;
-    docker push $image_name:$version
+
+  # push latest
+  if [[ $CIRCLE_BRANCH == "develop" ]]; then
+    echo "docker push $image_name:0.0"
+    docker push $image_name:$major_version.$minor_version
+    docker push $image_name
   fi
 done

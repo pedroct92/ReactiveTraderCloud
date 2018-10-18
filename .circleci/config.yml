@@ -109,7 +109,7 @@ jobs:
           name: "Deployment (Push containers to the repository)"
           command: |
             if [ $DEPLOY == 1 ]; then
-              cd deploy/e2e && ./pushContainers $BUILD_ID
+              .circleci/push $BUILD_ID
             fi
             if [[ $DEPLOY_TARGET != "" ]]; then
               ./deploy/kubernetes/apply $DEPLOY_TARGET
