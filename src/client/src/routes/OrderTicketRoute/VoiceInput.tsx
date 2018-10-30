@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
+import { HotKeys } from 'react-hotkeys'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -16,6 +17,7 @@ import { ChannelMerger } from './ChannelMerger'
 import { MediaPlayer } from './MediaPlayer'
 import { Microphone } from './Microphone'
 import { TranscriptionSession, SessionResult, SessionResultData } from './TranscriptionSession'
+import { ScribeSession } from './ScribeSession'
 import { UserMedia, UserMediaState } from './UserMedia'
 
 import BlobDownload from './devtools/BlobDownload'
@@ -45,6 +47,8 @@ interface State {
   sessionConnected: boolean
   sessionInstance?: any
   transcripts: any
+  // testing
+  useNext?: boolean
 }
 
 export interface VoiceInputResult extends SessionResultData {}
@@ -240,9 +244,20 @@ export class VoiceInput extends React.PureComponent<Props, State> {
                           />
 
                           {userMedia.mediaStream &&
-                            sessionActive && (
-                              // Open session to recognition backend and stream from output
+                            sessionActive &&
+                            // Open session to recognition backend and stream from output
 
+                            (!this.state.useNext ? (
+                              <ScribeSession
+                                ref={this.setSession}
+                                key={`Session${sessionCount}`}
+                                input={input.stream}
+                                onStart={this.onSessionStart}
+                                onResult={this.onSessionResult}
+                                onError={this.onSessionError}
+                                onEnd={this.onSessionEnd}
+                              />
+                            ) : (
                               <TranscriptionSession
                                 ref={this.setSession}
                                 key={`Session${sessionCount}`}
@@ -252,7 +267,7 @@ export class VoiceInput extends React.PureComponent<Props, State> {
                                 onError={this.onSessionError}
                                 onEnd={this.onSessionEnd}
                               />
-                            )}
+                            ))}
                         </React.Fragment>
                       )}
                     </UserMedia.Consumer>
@@ -266,7 +281,12 @@ export class VoiceInput extends React.PureComponent<Props, State> {
         {
           // Rendered Output
         }
-        <Root bg="primary.4" onClick={this.toggle}>
+        <Root
+          bg="primary.4"
+          onClick={this.toggle}
+          keyMap={{ toggleScribe: ['alt+t'] }}
+          handlers={{ toggleScribe: () => this.setState(({ useNext }) => ({ useNext: !useNext })) }}
+        >
           {sessionInstance ? null : (
             <MicrophoneButton
               fg={
@@ -336,7 +356,7 @@ export class VoiceInput extends React.PureComponent<Props, State> {
   }
 }
 
-const Root = styled(Block)`
+const Root = styled(Block.withComponent(HotKeys))`
   display: flex;
   align-items: center;
   height: 2.75rem;
